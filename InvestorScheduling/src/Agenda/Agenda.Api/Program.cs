@@ -1,7 +1,7 @@
 using Agenda.Api;
 using Agenda.Application;
 using Agenda.Infrastructure;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
