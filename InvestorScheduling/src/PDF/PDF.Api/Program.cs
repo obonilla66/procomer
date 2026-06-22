@@ -13,7 +13,6 @@
  * La lógica de generación de PDF vive en Application e Infrastructure.
  */
 
-using Microsoft.OpenApi.Models;
 using PDF.Api;
 using PDF.Application;
 using PDF.Infrastructure;
@@ -26,23 +25,7 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "PDF Microservice API",
-        Version = "v1",
-        Description = "Microservicio para generación de PDF profesional de agendas confirmadas."
-    });
-
-    var xmlFile = $"{typeof(Program).Assembly.GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
-    if (File.Exists(xmlPath))
-    {
-        options.IncludeXmlComments(xmlPath);
-    }
-});
+builder.Services.AddSwaggerGen();
 
 builder.Services
     .AddHttpClient("ExternalServices")
