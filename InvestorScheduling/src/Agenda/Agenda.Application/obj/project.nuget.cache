@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "JG5wAVgVHHs=",
+  "dgSpecHash": "stuD2J+RJCU=",
   "success": true,
   "projectFilePath": "C:\\Users\\Oscar Bonilla\\Documents\\procomer\\InvestorScheduling\\src\\Agenda\\Agenda.Application\\Agenda.Application.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Oscar Bonilla\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.9\\microsoft.extensions.dependencyinjection.abstractions.10.0.9.nupkg.sha512"
+  ],
   "logs": []
 }
