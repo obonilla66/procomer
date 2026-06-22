@@ -1,0 +1,101 @@
+# =====================================================
+# Build Stage
+# =====================================================
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
+WORKDIR /src
+
+COPY . .
+
+# =====================================================
+# Agenda
+# =====================================================
+
+FROM build AS agenda-build
+
+RUN dotnet restore ./Agenda/Agenda.Api/Agenda.Api.csproj
+RUN dotnet publish ./Agenda/Agenda.Api/Agenda.Api.csproj \
+    -c Release \
+    -o /app/publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS agenda
+
+WORKDIR /app
+
+EXPOSE 8080
+
+ENV ASPNETCORE_URLS=http://+:8080
+
+COPY --from=agenda-build /app/publish .
+
+ENTRYPOINT ["dotnet", "Agenda.Api.dll"]
+
+# =====================================================
+# PDF
+# =====================================================
+
+FROM build AS pdf-build
+
+RUN dotnet restore ./PDF/PDF.Api/PDF.Api.csproj
+RUN dotnet publish ./PDF/PDF.Api/PDF.Api.csproj \
+    -c Release \
+    -o /app/publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS pdf
+
+WORKDIR /app
+
+EXPOSE 8080
+
+ENV ASPNETCORE_URLS=http://+:8080
+
+COPY --from=pdf-build /app/publish .
+
+ENTRYPOINT ["dotnet", "PDF.Api.dll"]
+
+# =====================================================
+# Catalog
+# =====================================================
+
+FROM build AS catalog-build
+
+RUN dotnet restore ./Catalog/Catalog.Api/Catalog.Api.csproj
+RUN dotnet publish ./Catalog/Catalog.Api/Catalog.Api.csproj \
+    -c Release \
+    -o /app/publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS catalog
+
+WORKDIR /app
+
+EXPOSE 8080
+
+ENV ASPNETCORE_URLS=http://+:8080
+
+COPY --from=catalog-build /app/publish .
+
+ENTRYPOINT ["dotnet", "Catalog.Api.dll"]
+
+# =====================================================
+# Web
+# =====================================================
+
+FROM build AS web-build
+
+RUN dotnet restore ./Web/Web.csproj
+RUN dotnet publish ./Web/Web.csproj \
+    -c Release \
+    -o /app/publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS web
+
+WORKDIR /app
+
+EXPOSE 8080
+
+ENV ASPNETCORE_URLS=http://+:8080
+
+COPY --from=web-build /app/publish .
+
+ENTRYPOINT ["dotnet", "Web.dll"]
