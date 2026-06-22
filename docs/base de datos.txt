@@ -1,0 +1,123 @@
+CREATE TABLE Idioma (
+    CodigoIdioma CHAR(2) NOT NULL,
+    Idioma NVARCHAR(100) NOT NULL,
+    CONSTRAINT PK_Idioma PRIMARY KEY (CodigoIdioma)
+);
+
+CREATE TABLE Inversor (
+    Id INT IDENTITY(1,1) NOT NULL,
+    NombreCompleto NVARCHAR(200) NOT NULL,
+    EmpresaRepresenta NVARCHAR(200) NULL,
+    PaisOrigen NVARCHAR(100) NOT NULL,
+    FechaInicioVisita DATE NOT NULL,
+    FechaFinVisita DATE NOT NULL,
+    LugarHospedaje NVARCHAR(300) NOT NULL,
+    CONSTRAINT PK_Inversor PRIMARY KEY (Id),
+    CONSTRAINT CK_Inversor_Fechas CHECK (FechaFinVisita >= FechaInicioVisita)
+);
+
+CREATE TABLE InversorIdioma (
+    Id INT IDENTITY(1,1) NOT NULL,
+    IdInversor INT NOT NULL,
+    CodigoIdioma CHAR(2) NOT NULL,
+    CONSTRAINT PK_InversorIdioma PRIMARY KEY (Id),
+    CONSTRAINT FK_InversorIdioma_Inversor FOREIGN KEY (IdInversor) REFERENCES Inversor(Id),
+    CONSTRAINT FK_InversorIdioma_Idioma FOREIGN KEY (CodigoIdioma) REFERENCES Idioma(CodigoIdioma),
+    CONSTRAINT UQ_InversorIdioma UNIQUE (IdInversor, CodigoIdioma)
+);
+
+CREATE TABLE Oficina (
+    Id INT IDENTITY(1,1) NOT NULL,
+    Nombre NVARCHAR(150) NOT NULL,
+    Direccion NVARCHAR(300) NOT NULL,
+    Latitud DECIMAL(9,6) NULL,
+    Longitud DECIMAL(9,6) NULL,
+    CONSTRAINT PK_Oficina PRIMARY KEY (Id)
+);
+
+CREATE TABLE Participante (
+    Id INT IDENTITY(1,1) NOT NULL,
+    NombreCompleto NVARCHAR(200) NOT NULL,
+    Cargo NVARCHAR(150) NULL,
+    Institucion NVARCHAR(200) NOT NULL,
+    IdOficina INT NOT NULL,
+    Estado BIT NOT NULL DEFAULT 1,
+    CONSTRAINT PK_Participante PRIMARY KEY (Id),
+    CONSTRAINT FK_Participante_Oficina FOREIGN KEY (IdOficina) REFERENCES Oficina(Id)
+);
+
+CREATE TABLE ParticipanteIdioma (
+    Id INT IDENTITY(1,1) NOT NULL,
+    IdParticipante INT NOT NULL,
+    CodigoIdioma CHAR(2) NOT NULL,
+    CONSTRAINT PK_ParticipanteIdioma PRIMARY KEY (Id),
+    CONSTRAINT FK_ParticipanteIdioma_Participante FOREIGN KEY (IdParticipante) REFERENCES Participante(Id),
+    CONSTRAINT FK_ParticipanteIdioma_Idioma FOREIGN KEY (CodigoIdioma) REFERENCES Idioma(CodigoIdioma),
+    CONSTRAINT UQ_ParticipanteIdioma UNIQUE (IdParticipante, CodigoIdioma)
+);
+
+CREATE TABLE ParticipanteHorario (
+    Id INT IDENTITY(1,1) NOT NULL,
+    IdParticipante INT NOT NULL,
+    FechaHoraInicio DATETIME2 NOT NULL,
+    FechaHoraFin DATETIME2 NOT NULL,
+    Minutos AS DATEDIFF(MINUTE, FechaHoraInicio, FechaHoraFin),
+    CONSTRAINT PK_ParticipanteHorario PRIMARY KEY (Id),
+    CONSTRAINT FK_ParticipanteHorario_Participante FOREIGN KEY (IdParticipante) REFERENCES Participante(Id),
+    CONSTRAINT CK_ParticipanteHorario_Fechas CHECK (FechaHoraFin > FechaHoraInicio)
+);
+
+CREATE TABLE MatrizTraslado (
+    Id INT IDENTITY(1,1) NOT NULL,
+    IdOficinaOrigen INT NOT NULL,
+    IdOficinaDestino INT NOT NULL,
+    TiempoMinutos INT NOT NULL,
+    CONSTRAINT PK_MatrizTraslado PRIMARY KEY (Id),
+    CONSTRAINT FK_MatrizTraslado_OficinaOrigen FOREIGN KEY (IdOficinaOrigen) REFERENCES Oficina(Id),
+    CONSTRAINT FK_MatrizTraslado_OficinaDestino FOREIGN KEY (IdOficinaDestino) REFERENCES Oficina(Id),
+    CONSTRAINT CK_MatrizTraslado_Tiempo CHECK (TiempoMinutos >= 0),
+    CONSTRAINT CK_MatrizTraslado_Oficinas CHECK (IdOficinaOrigen <> IdOficinaDestino),
+    CONSTRAINT UQ_MatrizTraslado UNIQUE (IdOficinaOrigen, IdOficinaDestino)
+);
+
+CREATE TABLE Agenda (
+    Id INT IDENTITY(1,1) NOT NULL,
+    IdInversor INT NOT NULL,
+    Fecha DATE NOT NULL,
+    DuracionReunionMinutos INT NOT NULL,
+    CantidadReunionesMeta INT NOT NULL,
+    Estado BIT NOT NULL DEFAULT 1,
+    CONSTRAINT PK_Agenda PRIMARY KEY (Id),
+    CONSTRAINT FK_Agenda_Inversor FOREIGN KEY (IdInversor) REFERENCES Inversor(Id),
+    CONSTRAINT CK_Agenda_Duracion CHECK (DuracionReunionMinutos > 0),
+    CONSTRAINT CK_Agenda_Meta CHECK (CantidadReunionesMeta > 0)
+);
+
+CREATE TABLE AgendaParticipante (
+    Id INT IDENTITY(1,1) NOT NULL,
+    IdAgenda INT NOT NULL,
+    IdParticipante INT NOT NULL,
+    CONSTRAINT PK_AgendaParticipante PRIMARY KEY (Id),
+    CONSTRAINT FK_AgendaParticipante_Agenda FOREIGN KEY (IdAgenda) REFERENCES Agenda(Id),
+    CONSTRAINT FK_AgendaParticipante_Participante FOREIGN KEY (IdParticipante) REFERENCES Participante(Id),
+    CONSTRAINT UQ_AgendaParticipante UNIQUE (IdAgenda, IdParticipante)
+);
+
+CREATE TABLE AgendaDetalle (
+    Id INT IDENTITY(1,1) NOT NULL,
+    IdAgenda INT NOT NULL,
+    FechaHoraInicio DATETIME2 NOT NULL,
+    FechaHoraFin DATETIME2 NOT NULL,
+    IdParticipante INT NOT NULL,
+    CodigoIdioma CHAR(2) NOT NULL,
+    TiempoTrasladoSiguienteOficinaMinutos INT NULL,
+    CONSTRAINT PK_AgendaDetalle PRIMARY KEY (Id),
+    CONSTRAINT FK_AgendaDetalle_Agenda FOREIGN KEY (IdAgenda) REFERENCES Agenda(Id),
+    CONSTRAINT FK_AgendaDetalle_Participante FOREIGN KEY (IdParticipante) REFERENCES Participante(Id),
+    CONSTRAINT FK_AgendaDetalle_Idioma FOREIGN KEY (CodigoIdioma) REFERENCES Idioma(CodigoIdioma),
+    CONSTRAINT CK_AgendaDetalle_Fechas CHECK (FechaHoraFin > FechaHoraInicio),
+    CONSTRAINT CK_AgendaDetalle_Traslado CHECK (
+        TiempoTrasladoSiguienteOficinaMinutos IS NULL
+        OR TiempoTrasladoSiguienteOficinaMinutos >= 0
+    )
+);

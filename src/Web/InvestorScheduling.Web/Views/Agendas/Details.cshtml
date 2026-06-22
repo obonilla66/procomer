@@ -1,0 +1,54 @@
+﻿
+@model InvestorScheduling.Web.Models.AgendaDetalleCompletaResponse
+
+@{
+    ViewData["Title"] = "Detalle de agenda";
+}
+
+<h1>Detalle de agenda @Model.Id</h1>
+
+@if (TempData["Error"] is not null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<p><strong>Inversor:</strong> @Model.IdInversor</p>
+<p><strong>Fecha:</strong> @Model.Fecha.ToString("dd/MM/yyyy")</p>
+<p><strong>Estado:</strong> @(Model.Estado ? "Activa" : "Anulada")</p>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Inicio</th>
+        <th>Fin</th>
+        <th>Participante</th>
+        <th>Oficina</th>
+        <th>Idioma</th>
+        <th>Traslado siguiente</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Detalles)
+    {
+        <tr>
+            <td>@item.FechaHoraInicio.ToString("HH:mm")</td>
+            <td>@item.FechaHoraFin.ToString("HH:mm")</td>
+            <td>@item.Participante</td>
+            <td>@item.Oficina</td>
+            <td>@item.CodigoIdioma</td>
+            <td>@(item.TiempoTrasladoSiguienteOficinaMinutos?.ToString() ?? "-")</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<a class="btn btn-primary" asp-action="DownloadPdf" asp-route-id="@Model.Id">Descargar PDF</a>
+
+@if (Model.Estado)
+{
+    <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" class="d-inline">
+        <button type="submit" class="btn btn-danger">Anular agenda</button>
+    </form>
+}
+
+<a class="btn btn-secondary" asp-action="Index">Volver</a>
