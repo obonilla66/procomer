@@ -1,14 +1,3 @@
-/*
- * Registro de implementaciones de Infrastructure.
- *
- * Aquí se configura:
- * - DbContext con SQL Server.
- * - Repositorios concretos.
- *
- * La API invoca este registro en Program.cs, pero no utiliza directamente
- * ninguna clase de persistencia.
- */
-
 using Agenda.Application.Interfaces;
 using Agenda.Infrastructure.Persistence;
 using Agenda.Infrastructure.Repositories;

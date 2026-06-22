@@ -1,10 +1,3 @@
-/*
- * Repositorio de matriz de traslado.
- *
- * Entrega al algoritmo todos los tiempos de traslado configurados
- * entre oficinas.
- */
-
 using Agenda.Application.Interfaces;
 using Agenda.Domain.Entities;
 using Agenda.Infrastructure.Persistence;

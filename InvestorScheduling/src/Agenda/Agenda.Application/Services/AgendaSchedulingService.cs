@@ -1,24 +1,3 @@
-/*
- * Caso de uso principal del microservicio Agenda.
- *
- * Responsabilidades:
- * 1. Validar los parámetros de entrada.
- * 2. Obtener el inversor y sus idiomas.
- * 3. Obtener participantes candidatos activos y disponibles.
- * 4. Filtrar participantes por idioma compartido.
- * 5. Generar slots de reunión dentro del horario laboral.
- * 6. Excluir el bloque de almuerzo.
- * 7. Verificar tiempos de traslado entre oficinas.
- * 8. Buscar la mejor secuencia:
- *    - maximiza cantidad de reuniones;
- *    - ante empate, minimiza traslado total;
- *    - ante nuevo empate, prefiere finalizar antes.
- * 9. Guardar Agenda, AgendaParticipante y AgendaDetalle.
- *
- * Esta clase depende de interfaces definidas en Application.
- * No depende de EF Core ni de SQL Server.
- */
-
 using Agenda.Application.Dtos;
 using Agenda.Application.Interfaces;
 using Agenda.Domain.Entities;

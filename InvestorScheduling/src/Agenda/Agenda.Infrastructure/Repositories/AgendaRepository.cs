@@ -1,15 +1,3 @@
-/*
- * Repositorio de agenda.
- *
- * Implementa la persistencia transaccional de:
- * - Agenda;
- * - AgendaParticipante;
- * - AgendaDetalle.
- *
- * Usa una transacción para garantizar consistencia:
- * si falla algún detalle, no queda una agenda incompleta.
- */
-
 using Agenda.Application.Interfaces;
 using Agenda.Domain.Entities;
 using Agenda.Infrastructure.Persistence;

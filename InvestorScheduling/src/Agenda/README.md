@@ -1,123 +1,47 @@
 # Agenda Microservice
 
-Microservicio .NET 9 para generar agendas optimizadas para inversionistas.
-
-## Base de datos
-
-La base existente se llama:
-
-```text
-procomer
-```
-
-La cadena de conexión está en:
-
-```text
-Agenda.Api/appsettings.json
-```
-
-Debe contener:
-
-```text
-Initial Catalog=procomer
-```
+Microservicio .NET 9 para generación optimizada de agendas de inversionistas.
 
 ## Arquitectura
 
-Se usan 4 proyectos:
+Proyectos incluidos:
 
-```text
-Agenda.Api
-Agenda.Application
-Agenda.Domain
-Agenda.Infrastructure
-```
+- `Agenda.Api`: capa REST, Swagger, configuración de DI.
+- `Agenda.Application`: casos de uso, DTOs, interfaces y algoritmo de scheduling.
+- `Agenda.Domain`: entidades y reglas de negocio.
+- `Agenda.Infrastructure`: Entity Framework Core, SQL Server, repositorios y seed data.
 
-## Responsabilidad por capa
-
-### Agenda.Api
-
-Capa REST.
-
-Responsabilidades:
-
-- Exponer endpoints HTTP.
-- Configurar Swagger.
-- Registrar dependencias.
-- Devolver respuestas HTTP.
-
-Endpoint principal:
-
-```http
-POST /api/agendas/generar
-```
-
-### Agenda.Application
-
-Contiene el caso de uso de generación de agenda.
-
-Responsabilidades:
-
-- Validar parámetros.
-- Obtener inversor, participantes y matriz de traslado usando interfaces.
-- Generar slots de reunión.
-- Aplicar reglas de scheduling.
-- Seleccionar la mejor secuencia.
-- Solicitar persistencia de la agenda.
-
-No conoce EF Core ni SQL Server.
-
-### Agenda.Domain
-
-Contiene entidades y reglas puras de negocio.
-
-Reglas incluidas:
-
-- Horario laboral de 08:00 a 17:00.
-- Almuerzo bloqueado de 12:00 a 13:00.
-- Fecha de agenda dentro del período de visita.
-- Reuniones dentro del horario laboral.
-- No cruce con almuerzo.
-
-### Agenda.Infrastructure
-
-Contiene implementaciones técnicas:
-
-- `AgendaDbContext`.
-- Repositorios EF Core.
-- Configuración de tablas.
-- Seed data.
-
-## Estrategia de scheduling
-
-El algoritmo sigue este flujo:
-
-1. Validar inversor y fecha.
-2. Obtener idiomas del inversor.
-3. Obtener participantes candidatos activos.
-4. Filtrar candidatos que no comparten idioma.
-5. Generar slots posibles dentro del horario laboral.
-6. Excluir almuerzo.
-7. Consultar tiempos de traslado.
-8. Buscar la mejor secuencia con backtracking y poda.
-9. Maximizar cantidad de reuniones.
-10. Ante empate, minimizar traslado total.
-11. Guardar agenda y detalle.
+La API referencia Infrastructure solo para registrar dependencias en `Program.cs`.
+El algoritmo de scheduling no conoce EF Core; depende de interfaces definidas en Application.
 
 ## Ejecutar
-
-Desde la carpeta donde está `Agenda.sln`:
 
 ```powershell
 dotnet restore
 dotnet build
-dotnet run --project .\Agenda.Api\Agenda.Api.csproj
+dotnet run --project Agenda.Api
 ```
 
-Luego abrir:
+Swagger:
 
 ```text
 https://localhost:<puerto>/swagger
+```
+
+## Migraciones
+
+```powershell
+dotnet tool install --global dotnet-ef
+
+dotnet ef migrations add InitialCreate `
+  --project Agenda.Infrastructure `
+  --startup-project Agenda.Api `
+  --context AgendaDbContext
+
+dotnet ef database update `
+  --project Agenda.Infrastructure `
+  --startup-project Agenda.Api `
+  --context AgendaDbContext
 ```
 
 ## Request de prueba
@@ -132,26 +56,12 @@ https://localhost:<puerto>/swagger
 }
 ```
 
-## Migraciones
+Endpoint:
 
-Si se usan migrations:
-
-```powershell
-dotnet ef migrations add InitialCreate `
-  --project .\Agenda.Infrastructure\Agenda.Infrastructure.csproj `
-  --startup-project .\Agenda.Api\Agenda.Api.csproj `
-  --context AgendaDbContext
+```http
+POST /api/agendas/generar
 ```
 
-Aplicar:
+## Nota de seguridad
 
-```powershell
-dotnet ef database update `
-  --project .\Agenda.Infrastructure\Agenda.Infrastructure.csproj `
-  --startup-project .\Agenda.Api\Agenda.Api.csproj `
-  --context AgendaDbContext
-```
-
-## Comentarios para programador
-
-Los archivos principales tienen comentarios `/* ... */` al inicio, explicando su responsabilidad y cómo encajan dentro de la arquitectura.
+El archivo `appsettings.json` incluye la cadena de conexión solicitada. Para un repositorio público, se recomienda moverla a user-secrets o variables de ambiente.

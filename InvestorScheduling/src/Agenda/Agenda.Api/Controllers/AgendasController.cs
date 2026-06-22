@@ -1,16 +1,3 @@
-/*
- * Controlador REST para generación de agendas.
- *
- * Expone:
- *
- *   POST /api/agendas/generar
- *
- * El controlador no contiene lógica de scheduling.
- * Solo recibe el request, delega en Application y devuelve:
- * - 200 si la agenda fue generada.
- * - 400 si alguna regla de negocio impide generar la agenda.
- */
-
 using Agenda.Application.Dtos;
 using Agenda.Application.Services;
 using Microsoft.AspNetCore.Mvc;

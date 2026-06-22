@@ -1,22 +1,3 @@
-/*
- * DbContext principal del microservicio Agenda.
- *
- * Mapea las entidades del dominio contra las tablas de SQL Server:
- * - Idioma
- * - Inversor
- * - InversorIdioma
- * - Oficina
- * - Participante
- * - ParticipanteIdioma
- * - ParticipanteHorario
- * - MatrizTraslado
- * - Agenda
- * - AgendaParticipante
- * - AgendaDetalle
- *
- * También contiene configuración de relaciones, índices únicos y seed data.
- */
-
 using Agenda.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

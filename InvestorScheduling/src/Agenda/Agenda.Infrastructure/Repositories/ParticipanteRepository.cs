@@ -1,11 +1,3 @@
-/*
- * Repositorio de participantes.
- *
- * Implementa IParticipanteRepository usando EF Core.
- * Devuelve participantes activos, con oficina, idiomas y horarios
- * disponibles para la fecha solicitada.
- */
-
 using Agenda.Application.Interfaces;
 using Agenda.Domain.Entities;
 using Agenda.Infrastructure.Persistence;

@@ -1,16 +1,3 @@
-/*
- * Políticas de resiliencia para llamadas HTTP externas.
- *
- * El microservicio Agenda puede requerir comunicación con otros servicios.
- * Por eso se dejan preparadas políticas de:
- * - Reintentos con backoff exponencial.
- * - Circuit breaker.
- * - Timeout.
- *
- * Estas políticas evitan que una falla externa bloquee indefinidamente
- * el proceso de scheduling.
- */
-
 using Polly;
 using Polly.Extensions.Http;
 

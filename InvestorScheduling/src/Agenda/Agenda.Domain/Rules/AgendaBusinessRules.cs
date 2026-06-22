@@ -1,13 +1,3 @@
-/*
- * Reglas de negocio puras del dominio de Agenda.
- *
- * Aquí se centralizan reglas que no dependen de infraestructura:
- * - horario laboral;
- * - bloque de almuerzo;
- * - validación de ventana de visita;
- * - verificación de reuniones dentro de horario.
- */
-
 namespace Agenda.Domain.Rules;
 
 public static class AgendaBusinessRules

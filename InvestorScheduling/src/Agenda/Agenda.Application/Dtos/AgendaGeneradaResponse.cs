@@ -1,15 +1,3 @@
-/*
- * DTO de salida del proceso de generación de agenda.
- *
- * Incluye:
- * - resultado funcional;
- * - mensaje explicativo;
- * - IdAgenda generado;
- * - cantidad de reuniones programadas;
- * - traslado total;
- * - detalle ordenado de reuniones.
- */
-
 namespace Agenda.Application.Dtos;
 
 public class AgendaGeneradaResponse

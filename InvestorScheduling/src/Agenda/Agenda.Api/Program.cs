@@ -1,23 +1,7 @@
-/*
- * Punto de entrada del microservicio Agenda.
- *
- * Responsabilidades:
- * - Configurar la capa REST.
- * - Habilitar Swagger.
- * - Registrar los servicios de Application.
- * - Registrar las implementaciones de Infrastructure.
- * - Configurar HttpClient con políticas de resiliencia usando Polly.
- *
- * Nota arquitectónica:
- * La API actúa como composition root. Por eso referencia Infrastructure
- * únicamente para registrar dependencias, no para usar DbContext,
- * repositorios o lógica de datos directamente.
- */
-
 using Agenda.Api;
 using Agenda.Application;
 using Agenda.Infrastructure;
-using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

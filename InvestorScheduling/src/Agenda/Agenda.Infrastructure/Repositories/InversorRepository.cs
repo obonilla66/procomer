@@ -1,11 +1,3 @@
-/*
- * Repositorio de inversores.
- *
- * Implementa IInversorRepository usando EF Core.
- * Su responsabilidad es devolver el inversor junto con los idiomas
- * necesarios para validar compatibilidad lingüística.
- */
-
 using Agenda.Application.Interfaces;
 using Agenda.Domain.Entities;
 using Agenda.Infrastructure.Persistence;
