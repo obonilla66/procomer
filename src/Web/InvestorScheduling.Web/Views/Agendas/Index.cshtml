@@ -1,0 +1,45 @@
+﻿
+@model List<InvestorScheduling.Web.Models.AgendaResumenResponse>
+
+@{
+    ViewData["Title"] = "Agendas";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Agendas</h1>
+    <a class="btn btn-success" asp-action="Generate">Generar agenda</a>
+</div>
+
+@if (TempData["Error"] is not null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Inversor</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+        <th>Reuniones</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.IdInversor</td>
+            <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+            <td>@(item.Estado ? "Activa" : "Anulada")</td>
+            <td>@item.CantidadReunionesProgramadas</td>
+            <td>
+                <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">Detalle</a>
+                <a class="btn btn-sm btn-outline-secondary" asp-action="DownloadPdf" asp-route-id="@item.Id">PDF</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

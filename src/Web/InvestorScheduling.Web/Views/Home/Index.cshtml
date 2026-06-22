@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewData["Title"] = "PROCOMER - Calendarización";
+}
+
+<div class="text-center mb-4">
+    <h1>PROCOMER - Calendarización de Inversores</h1>
+    <p class="lead">Frontend MVC consumiendo microservicios de Catálogo, Agenda y PDF.</p>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5>Inversores</h5>
+                <p>Mantenimiento básico de inversores.</p>
+                <a class="btn btn-primary" asp-controller="Inversores" asp-action="Index">Ir a inversores</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5>Generar agenda</h5>
+                <p>Crear una agenda automática usando Agenda API.</p>
+                <a class="btn btn-success" asp-controller="Agendas" asp-action="Generate">Generar agenda</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5>Agendas</h5>
+                <p>Listado, detalle, anulación y descarga de PDF.</p>
+                <a class="btn btn-secondary" asp-controller="Agendas" asp-action="Index">Ver agendas</a>
+            </div>
+        </div>
+    </div>
+</div>

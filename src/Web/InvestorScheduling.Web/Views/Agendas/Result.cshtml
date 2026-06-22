@@ -1,0 +1,48 @@
+﻿
+@model InvestorScheduling.Web.Models.AgendaGeneradaResponse
+
+@{
+    ViewData["Title"] = "Resultado de agenda";
+}
+
+<h1>Resultado de agenda</h1>
+
+<div class="alert @(Model.Exitoso ? "alert-success" : "alert-warning")">
+    @Model.Mensaje
+</div>
+
+@if (Model.IdAgenda.HasValue)
+{
+    <p><strong>Agenda:</strong> @Model.IdAgenda</p>
+    <p><strong>Reuniones:</strong> @Model.ReunionesProgramadas</p>
+    <p><strong>Traslado total:</strong> @Model.TiempoTotalTrasladoMinutos minutos</p>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Participante</th>
+            <th>Oficina</th>
+            <th>Idioma</th>
+            <th>Traslado siguiente</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Detalles)
+        {
+            <tr>
+                <td>@item.FechaHoraInicio.ToString("HH:mm")</td>
+                <td>@item.FechaHoraFin.ToString("HH:mm")</td>
+                <td>@item.Participante</td>
+                <td>@item.Oficina</td>
+                <td>@item.CodigoIdioma</td>
+                <td>@(item.TiempoTrasladoSiguienteOficinaMinutos?.ToString() ?? "-")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary" asp-action="DownloadPdf" asp-route-id="@Model.IdAgenda">Descargar PDF</a>
+    <a class="btn btn-secondary" asp-action="Details" asp-route-id="@Model.IdAgenda">Ver detalle</a>
+}

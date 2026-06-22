@@ -1,0 +1,59 @@
+﻿
+@model InvestorScheduling.Web.Models.CrearInversorRequest
+
+@{
+    ViewData["Title"] = "Nuevo inversor";
+}
+
+<h1>Nuevo inversor</h1>
+
+<form asp-action="Create" method="post" class="row g-3">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="col-md-6">
+        <label asp-for="NombreCompleto" class="form-label">Nombre completo</label>
+        <input asp-for="NombreCompleto" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="EmpresaRepresenta" class="form-label">Empresa</label>
+        <input asp-for="EmpresaRepresenta" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="PaisOrigen" class="form-label">País origen</label>
+        <input asp-for="PaisOrigen" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="LugarHospedaje" class="form-label">Lugar hospedaje</label>
+        <input asp-for="LugarHospedaje" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="FechaInicioVisita" class="form-label">Fecha inicio</label>
+        <input asp-for="FechaInicioVisita" type="date" class="form-control" />
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="FechaFinVisita" class="form-label">Fecha fin</label>
+        <input asp-for="FechaFinVisita" type="date" class="form-control" />
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Idiomas</label>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="CodigosIdioma" value="ES" id="idiomaEs" />
+            <label class="form-check-label" for="idiomaEs">Español</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="CodigosIdioma" value="EN" id="idiomaEn" />
+            <label class="form-check-label" for="idiomaEn">Inglés</label>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
